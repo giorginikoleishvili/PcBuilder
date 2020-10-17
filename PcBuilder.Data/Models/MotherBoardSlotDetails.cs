@@ -8,7 +8,6 @@ namespace PcBuilder.Data.Models
         public int Id { get; set; }
         public int MotherBoardSlotId { get; set; }
         public int? Count { get; set; }
-        public string Name { get; set; }
 
         public virtual MotherBoardSlot MotherBoardSlot { get; set; }
     }

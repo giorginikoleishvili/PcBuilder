@@ -56,9 +56,11 @@ namespace PcBuilder.Data.Models
         public virtual DbSet<PortType> PortType { get; set; }
         public virtual DbSet<PowerSupply> PowerSupply { get; set; }
         public virtual DbSet<PowerSupplyType> PowerSupplyType { get; set; }
+        public virtual DbSet<ProductStore> ProductStore { get; set; }
         public virtual DbSet<SeriesType> SeriesType { get; set; }
         public virtual DbSet<SlotType> SlotType { get; set; }
         public virtual DbSet<SocketType> SocketType { get; set; }
+        public virtual DbSet<SoldProduct> SoldProduct { get; set; }
         public virtual DbSet<Storage> Storage { get; set; }
         public virtual DbSet<StorageType> StorageType { get; set; }
         public virtual DbSet<VideoCard> VideoCard { get; set; }
@@ -72,7 +74,7 @@ namespace PcBuilder.Data.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=PcBuilder_Dev;Trusted_Connection=True; Integrated Security=true");
+                optionsBuilder.UseSqlServer("Server=(localDB)\\MSSQLLocalDB;Database=PcBuilder_Dev;Trusted_Connection=True;");
             }
         }
 
@@ -290,8 +292,6 @@ namespace PcBuilder.Data.Models
             modelBuilder.Entity<FrameSyncType>(entity =>
             {
                 entity.ToTable("FrameSyncType", "PcHardware");
-
-                entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.Name)
                     .IsRequired()
@@ -583,10 +583,6 @@ namespace PcBuilder.Data.Models
             {
                 entity.ToTable("MotherBoardSlotDetails", "PcHardware");
 
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(50);
-
                 entity.HasOne(d => d.MotherBoardSlot)
                     .WithMany(p => p.MotherBoardSlotDetails)
                     .HasForeignKey(d => d.MotherBoardSlotId)
@@ -692,6 +688,25 @@ namespace PcBuilder.Data.Models
                     .HasMaxLength(50);
             });
 
+            modelBuilder.Entity<ProductStore>(entity =>
+            {
+                entity.ToTable("ProductStore", "Shop");
+
+                entity.Property(e => e.ImportDate).HasColumnType("datetime");
+
+                entity.HasOne(d => d.Categoey)
+                    .WithMany(p => p.ProductStore)
+                    .HasForeignKey(d => d.CategoeyId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProductStore_Category");
+
+                entity.HasOne(d => d.ConditionType)
+                    .WithMany(p => p.ProductStore)
+                    .HasForeignKey(d => d.ConditionTypeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProductStore_ConditionType");
+            });
+
             modelBuilder.Entity<SeriesType>(entity =>
             {
                 entity.ToTable("SeriesType", "PcHardware");
@@ -731,6 +746,15 @@ namespace PcBuilder.Data.Models
                     .WithMany(p => p.SocketType)
                     .HasForeignKey(d => d.HardwareTypeId)
                     .HasConstraintName("FK_SocketType_HardwareType");
+            });
+
+            modelBuilder.Entity<SoldProduct>(entity =>
+            {
+                entity.ToTable("SoldProduct", "Shop");
+
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.SellDate).HasColumnType("datetime");
             });
 
             modelBuilder.Entity<Storage>(entity =>

@@ -13,6 +13,7 @@ namespace PcBuilder.Data.Models
             MotherBoard = new HashSet<MotherBoard>();
             OpticalDrive = new HashSet<OpticalDrive>();
             PowerSupply = new HashSet<PowerSupply>();
+            ProductStore = new HashSet<ProductStore>();
             Storage = new HashSet<Storage>();
             VideoCard = new HashSet<VideoCard>();
         }
@@ -26,6 +27,7 @@ namespace PcBuilder.Data.Models
         public virtual ICollection<MotherBoard> MotherBoard { get; set; }
         public virtual ICollection<OpticalDrive> OpticalDrive { get; set; }
         public virtual ICollection<PowerSupply> PowerSupply { get; set; }
+        public virtual ICollection<ProductStore> ProductStore { get; set; }
         public virtual ICollection<Storage> Storage { get; set; }
         public virtual ICollection<VideoCard> VideoCard { get; set; }
     }
